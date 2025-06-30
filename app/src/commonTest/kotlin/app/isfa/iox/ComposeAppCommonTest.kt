@@ -3,7 +3,7 @@ package app.isfa.iox
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ComposeAppCommonTest {
+class appCommonTest {
 
     @Test
     fun example() {
