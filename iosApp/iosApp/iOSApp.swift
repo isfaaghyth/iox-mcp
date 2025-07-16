@@ -3,11 +3,14 @@ import MoneyMonitor
 
 @main
 struct iOSApp: App {
-    @StateObject private var imageHandler = ImageHandler()
+    private var receiver = ImageIntentReceiver()
 
     var body: some Scene {
         WindowGroup {
-            ContentView(image: imageHandler)
+            ContentView()
+                .onOpenURL { url in
+                    receiver.handleSharedImages(urls: [url])
+                }
         }
     }
 }
