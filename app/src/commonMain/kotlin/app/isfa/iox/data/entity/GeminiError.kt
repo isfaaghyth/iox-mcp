@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GeminiResponse(
-    @SerialName("candidates") val candidates: List<GeminiCandidate>,
+data class GeminiError(
+    @SerialName("code") val code: Int,
+    @SerialName("message") val message: String,
 )

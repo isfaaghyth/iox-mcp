@@ -15,7 +15,6 @@ object NetworkClient {
     private const val BASE_URL = "https://generativelanguage.googleapis.com/"
 
     val create = HttpClient {
-
         defaultRequest { url(BASE_URL) }
 
         install(ContentNegotiation) {

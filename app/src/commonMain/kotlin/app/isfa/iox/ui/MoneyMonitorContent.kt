@@ -8,14 +8,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.isfa.iox.di.MoneyMonitorProvider
 import app.isfa.iox.intent.ImageIntentData
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun MoneyMonitorContent(images: List<ImageIntentData>) {
+fun MoneyMonitorContent(
+    images: List<ImageIntentData>,
+    viewModel: MoneyMonitorViewModel = MoneyMonitorProvider.viewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(images.isNotEmpty()) {
+        if (images.isNotEmpty()) {
+            viewModel.sendEvent(SendRequest(images.first()))
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -32,7 +47,7 @@ fun MoneyMonitorContent(images: List<ImageIntentData>) {
         if (images.isEmpty()) {
             Text("No images received yet. Share an image to this app!")
         } else {
-            Text("Received ${images.size} image(s)")
+            Text("Received ${images.size} image(s), ${state.state} ${state.result}")
             // Here you can add image display logic
         }
     }
