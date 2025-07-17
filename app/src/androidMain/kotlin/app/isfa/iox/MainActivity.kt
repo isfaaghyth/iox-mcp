@@ -13,16 +13,7 @@ import app.isfa.iox.intent.ImageIntentReceiver
 
 class MainActivity : ComponentActivity() {
 
-    private var receivedImages = mutableStateListOf<ImageIntentData>()
-
-    private val receiver by lazy {
-        ImageIntentReceiver(
-            context = this,
-            listener = {
-                receivedImages.add(it)
-            }
-        )
-    }
+    private val receiver by lazy { ImageIntentReceiver(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -30,7 +21,7 @@ class MainActivity : ComponentActivity() {
         handleIntent(intent)
 
         setContent {
-            App(receivedImages)
+            App()
         }
     }
 
