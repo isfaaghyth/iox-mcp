@@ -4,7 +4,13 @@ import app.isfa.iox.data.api.GeminiApi
 import app.isfa.iox.data.repository.GeminiRepository
 import app.isfa.iox.data.repository.GeminiRepositoryImpl
 import app.isfa.iox.domain.GetGeminiUseCase
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
-private fun createGeminiApi(): GeminiApi = GeminiApi.create()
-private fun createGeminiRepository(): GeminiRepository = GeminiRepositoryImpl(createGeminiApi())
-private fun createGeminiUseCase(): GetGeminiUseCase = GetGeminiUseCase(createGeminiRepository())
+val appModule = module {
+    single<GeminiApi> { GeminiApi.create() }
+
+    factoryOf(::GeminiRepositoryImpl) bind GeminiRepository::class
+    factoryOf(::GetGeminiUseCase) bind GetGeminiUseCase::class
+}

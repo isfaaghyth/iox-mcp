@@ -5,6 +5,10 @@ import MoneyMonitor
 struct iOSApp: App {
     private var receiver = ImageIntentReceiver()
 
+    init() {
+        ProvidersKt.doInitKoin()
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
