@@ -11,9 +11,8 @@ interface GeminiApi {
     suspend fun request(request: String): Result<GeminiResponse>
 
     companion object {
-
-        private const val GEMINI_PRO_VISION = "gemini-1.5-flash-latest"
-        private const val URL = "v1beta/models/$GEMINI_PRO_VISION:generateContent?key=XXXX"
+        private const val MODEL_VERSION = "gemini-2.0-flash"
+        private const val URL = "v1beta/models/$MODEL_VERSION:generateContent?key=XXX"
 
         fun create() = object : GeminiApi {
             override suspend fun request(request: String): Result<GeminiResponse> {
