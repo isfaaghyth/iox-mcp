@@ -7,34 +7,20 @@ import app.isfa.iox.util.cleanUp
 
 interface GeminiRepository {
 
-    suspend fun request(image: ByteArray): String?
+    suspend fun request(prompt: String, image: ByteArray): Result<String>
 }
 
 internal class GeminiRepositoryImpl(private val api: GeminiApi) : GeminiRepository {
 
-    override suspend fun request(image: ByteArray): String? {
-        val prompt = """
-                You are a receipt information extractor. Extract the following information from the attached receipt image:
-                
-                1. Total amount: Find the exact total amount in Indonesian Rupiah (IDR)
-                2. Merchant name: Identify the business/store name
-                3. Category: Determine the most appropriate spending category based on the merchant and items purchased
-                
-                Return only a valid JSON response in this exact format:
-                { "merchant_name": "", "total_rupiah": "", "category": "" }
-                
-                Requirements:
-                - Extract the exact total amount as it appears on the receipt
-                - Use the full merchant name as shown on the receipt
-                - Select an appropriate category (e.g., "Food & Dining", "Groceries", "Transportation", "Shopping", "Healthcare", etc.)
-                - Return only the JSON object, no additional text or explanations
-            """.trimIndent()
-
+    override suspend fun request(prompt: String, image: ByteArray): Result<String> {
         val reqBody = RequestBody.create(prompt, image)
+        val response = api.request(reqBody)
 
-        return api.request(reqBody)
-            .map(::extractFirstPromptResult)
-            .getOrNull()
+        if (response.isSuccess && response.getOrNull()?.error != null) {
+            return Result.failure(Exception(response.getOrNull()?.error?.message))
+        }
+
+        return response.map(::extractFirstPromptResult)
     }
 
     private fun extractFirstPromptResult(response: GeminiResponse) =
@@ -44,5 +30,6 @@ internal class GeminiRepositoryImpl(private val api: GeminiApi) : GeminiReposito
             ?.parts
             ?.firstOrNull()
             ?.text
-            ?.cleanUp()
+            .orEmpty()
+
 }
