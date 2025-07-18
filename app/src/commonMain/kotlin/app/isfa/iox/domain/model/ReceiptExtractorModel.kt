@@ -5,16 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ReceiptExtractorModel(
-    @SerialName("merchant_name") val merchantName: String,
+    @SerialName("name") val name: String,
     @SerialName("total_rupiah") val total: String,
     @SerialName("category") val category: String,
-) {
-
-    companion object {
-        val Empty get() = ReceiptExtractorModel(
-            merchantName = "",
-            total = "",
-            category = ""
-        )
-    }
-}
+    @SerialName("time") val time: Long,
+)

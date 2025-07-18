@@ -6,10 +6,11 @@ Extract the following information from the attached receipt image:
 3. Category: Determine the most appropriate spending category based on the merchant and items purchased
 
 Return only a valid JSON response in this exact format:
-{ "merchant_name": "", "total_rupiah": "", "category": "" }
+{ "name": "", "total_rupiah": "", "category": "", "time": "" }
 
 Requirements:
-- Extract the exact total amount as it appears on the receipt
+- Extract the exact total amount as it appears on the receipt as integer not floating number.
 - Use the full merchant name as shown on the receipt
 - Select an appropriate category (e.g., "Food & Dining", "Groceries", "Transportation", "Shopping", "Healthcare", etc.)
 - Return only the JSON object, no additional text or explanations
+- Return the time as long type of epoc milliseconds value, if you couldn't get it, get the current time.

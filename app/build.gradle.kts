@@ -52,8 +52,16 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.kotlinx.coroutines)
+            implementation(libs.kotlinx.datetime)
 
             implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenmodel)
+            implementation(libs.voyager.bottomsheet.navigator)
+            implementation(libs.voyager.transitions)
+            implementation(libs.voyager.koin)
 
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.serialization)

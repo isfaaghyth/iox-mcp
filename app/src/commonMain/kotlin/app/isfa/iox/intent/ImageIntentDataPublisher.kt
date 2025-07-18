@@ -11,4 +11,8 @@ object ImageIntentDataPublisher {
     fun store(data: ImageIntentData) {
         _capturedImage.value = data
     }
+
+    fun reset() {
+        _capturedImage.value = null
+    }
 }
