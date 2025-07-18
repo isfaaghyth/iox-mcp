@@ -5,15 +5,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import app.isfa.iox.intent.ImageIntentDataPublisher
-import app.isfa.iox.ui.MoneyMonitorContent
+import app.isfa.iox.ui.intent.MoneyMonitorContent
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App() {
-    val capturedImages by ImageIntentDataPublisher.capturedImages.collectAsState()
+    val capturedImage by ImageIntentDataPublisher.capturedImage.collectAsState()
 
     MaterialTheme {
-        MoneyMonitorContent(capturedImages)
+        MoneyMonitorContent(capturedImage)
     }
 }

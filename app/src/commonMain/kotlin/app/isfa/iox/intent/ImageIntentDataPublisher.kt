@@ -5,10 +5,10 @@ import kotlinx.coroutines.flow.asStateFlow
 
 object ImageIntentDataPublisher {
 
-    private var _capturedImages = MutableStateFlow<List<ImageIntentData>>(emptyList())
-    val capturedImages get() = _capturedImages.asStateFlow()
+    private var _capturedImage = MutableStateFlow<ImageIntentData?>(null)
+    val capturedImage get() = _capturedImage.asStateFlow()
 
     fun store(data: ImageIntentData) {
-        _capturedImages.value += data
+        _capturedImage.value = data
     }
 }

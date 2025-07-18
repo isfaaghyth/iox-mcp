@@ -1,4 +1,4 @@
-package app.isfa.iox.ui
+package app.isfa.iox.ui.intent
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,15 +20,13 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MoneyMonitorContent(
-    images: List<ImageIntentData>,
+    imageIntentData: ImageIntentData?,
     viewModel: MoneyMonitorViewModel = MoneyMonitorProvider.viewModel()
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(images.isNotEmpty()) {
-        if (images.isNotEmpty()) {
-            viewModel.sendEvent(SendRequest(images.first()))
-        }
+    LaunchedEffect(imageIntentData) {
+        imageIntentData?.let { viewModel.emit(it) }
     }
 
     Column(
@@ -44,10 +42,10 @@ fun MoneyMonitorContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (images.isEmpty()) {
+        if (imageIntentData == null) {
             Text("No images received yet. Share an image to this app!")
         } else {
-            Text("Received ${images.size} image(s), ${state.state} ${state.result}")
+            Text("Received ${imageIntentData.fileName}, $state")
             // Here you can add image display logic
         }
     }
@@ -56,5 +54,5 @@ fun MoneyMonitorContent(
 @Preview
 @Composable
 fun MoneyMonitorContentPreview() {
-    MoneyMonitorContent(listOf())
+    MoneyMonitorContent(null)
 }
