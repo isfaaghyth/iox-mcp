@@ -35,7 +35,7 @@ class MoneyMonitorScreen(private val intentData: ImageIntentData?) : Screen {
 
             IntentImageBottomSheet(
                 info = it,
-                onSave = {  },
+                onSave = { model -> viewModel.store(model) },
                 onDismiss = { shouldExpenseInfoSheetShown = false }
             )
         }

@@ -1,6 +1,6 @@
 import app.isfa.iox.data.entity.ExpenseResponse
 
-object ExpenseDatabase {
+object ExpenseDb {
 
     private val items = mutableListOf<ExpenseResponse>()
     private var nextId = 1

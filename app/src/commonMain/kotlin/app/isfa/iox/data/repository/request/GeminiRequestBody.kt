@@ -6,11 +6,11 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Serializable
-data class RequestBody(
+data class GeminiRequestBody(
     @SerialName("contents") val contents: List<RequestContentItem>
 ) {
 
-    companion object {
+    companion object Companion {
         fun create(prompt: String, image: ByteArray): String {
             val parts = mutableListOf<RequestContentPart>()
             parts.add(RequestContentPart(text = prompt))
@@ -23,7 +23,7 @@ data class RequestBody(
                 )
             )
 
-            val body = RequestBody(contents = listOf(RequestContentItem(parts)))
+            val body = GeminiRequestBody(contents = listOf(RequestContentItem(parts)))
             return Json.encodeToString(body)
         }
     }

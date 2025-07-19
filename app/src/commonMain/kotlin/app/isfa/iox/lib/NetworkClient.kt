@@ -2,7 +2,6 @@ package app.isfa.iox.lib
 
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -12,11 +11,10 @@ import kotlinx.serialization.json.Json
 
 object NetworkClient {
 
-    private const val BASE_URL = "https://generativelanguage.googleapis.com/"
+    val ExpenseBaseUrl get() = "http://10.0.2.2:8080/"
+    val GeminiBaseUrl get() = "https://generativelanguage.googleapis.com/"
 
     val create = HttpClient {
-        defaultRequest { url(BASE_URL) }
-
         install(ContentNegotiation) {
             json(
                 Json {
