@@ -1,11 +1,12 @@
 package app.isfa.iox.data.repository.request
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 class ExpenseRequestBody(
-    val name: String,
-    val amount: String,
-    val category: String,
-    val time: String
+    @SerialName("name") val name: String,
+    @SerialName("amount") val amount: String,
+    @SerialName("category") val category: String,
+    @SerialName("time") val time: String
 )

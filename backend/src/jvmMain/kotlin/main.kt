@@ -1,4 +1,3 @@
-import app.isfa.iox.data.repository.request.ExpenseRequestBody
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -11,7 +10,16 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+
+@Serializable
+class CreateExpenseRequestBody(
+    val name: String,
+    val amount: String,
+    val category: String,
+    val time: String
+)
 
 fun main() {
     embeddedServer(
@@ -37,7 +45,7 @@ fun Application.module() {
 
         post("/expense/create") {
             try {
-                val request = call.receive<ExpenseRequestBody>()
+                val request = call.receive<CreateExpenseRequestBody>()
                 val item = ExpenseDb.add(
                     name = request.name,
                     amount = request.amount,

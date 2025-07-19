@@ -6,14 +6,14 @@ import app.isfa.iox.data.repository.request.ExpenseRequestBody
 
 interface ExpenseRepository {
 
-    suspend fun all(): Result<List<ExpenseResponse>>
+    suspend fun all(fromMcp: Boolean): Result<List<ExpenseResponse>>
     suspend fun create(body: ExpenseRequestBody)
 }
 
 class ExpenseRepositoryImpl(private val api: EndpointApi) : ExpenseRepository {
 
-    override suspend fun all(): Result<List<ExpenseResponse>> {
-        return api.expenses()
+    override suspend fun all(fromMcp: Boolean): Result<List<ExpenseResponse>> {
+        return api.expenses(fromMcp)
     }
 
     override suspend fun create(body: ExpenseRequestBody) {

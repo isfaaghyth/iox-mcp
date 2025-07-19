@@ -33,7 +33,7 @@ fun configureServer(): Server {
         name = "get-expense-list",
         description = "The list of expense from daily transaction"
     ) {
-        val expenses = repository.all().getOrNull() ?: listOf()
+        val expenses = repository.all(fromMcp = true).getOrNull() ?: listOf()
         CallToolResult(
             content = expenses.map {
                 TextContent(it.toString())

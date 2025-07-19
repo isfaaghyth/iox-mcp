@@ -16,12 +16,12 @@ interface EndpointApi {
 
     suspend fun extractInfo(request: String): Result<GeminiResponse>
 
-    suspend fun expenses(): Result<List<ExpenseResponse>>
+    suspend fun expenses(fromMcp: Boolean): Result<List<ExpenseResponse>>
     suspend fun createExpense(body: ExpenseRequestBody): Result<List<ExpenseResponse>>
 
     companion object Companion {
         private const val MODEL_VERSION = "gemini-2.0-flash"
-        private const val URL = "v1beta/models/$MODEL_VERSION:generateContent?key="
+        private const val URL = "v1beta/models/$MODEL_VERSION:generateContent?key=XXX"
 
         fun create() = object : EndpointApi {
             override suspend fun extractInfo(request: String): Result<GeminiResponse> {
@@ -33,11 +33,14 @@ interface EndpointApi {
                 }
             }
 
-            override suspend fun expenses(): Result<List<ExpenseResponse>> {
+            override suspend fun expenses(fromMcp: Boolean): Result<List<ExpenseResponse>> {
+                val baseUrl = if (fromMcp) NetworkClient.McpExpenseBaseUrl else NetworkClient.ExpenseBaseUrl
                 return runCatching {
                     NetworkClient
                         .create
-                        .get("${NetworkClient.ExpenseBaseUrl}expenses")
+                        .get("${baseUrl}expenses") {
+                            contentType(ContentType.Application.Json)
+                        }
                         .body()
                 }
             }

@@ -15,11 +15,9 @@ fun main() {
     )
 
     runBlocking {
+        val job = Job()
+        server.onClose { job.complete() }
         server.connect(transport)
-        val done = Job()
-        server.onClose {
-            done.complete()
-        }
-        done.join()
+        job.join()
     }
 }

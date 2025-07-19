@@ -11,7 +11,7 @@ class GetExpenseListUseCase(private val repository: ExpenseRepository) {
 
     operator fun invoke(): Flow<List<GroupExpenseUiModel>?> {
         return flow {
-            val result = repository.all().getOrDefault(emptyList())
+            val result = repository.all(fromMcp = false).getOrDefault(emptyList())
 
             emit(
                 listOf(

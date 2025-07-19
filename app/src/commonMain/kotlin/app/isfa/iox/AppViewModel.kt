@@ -4,12 +4,15 @@ import app.isfa.iox.data.repository.request.ExpenseRequestBody
 import app.isfa.iox.domain.GetExpenseInfoUseCase
 import app.isfa.iox.domain.GetExpenseListUseCase
 import app.isfa.iox.domain.model.ExpenseUiModel
+import app.isfa.iox.domain.model.GroupExpenseUiModel
 import app.isfa.iox.intent.ImageIntentData
 import app.isfa.iox.intent.ImageIntentDataPublisher
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -22,6 +25,9 @@ class AppViewModel(
 
     private var intentData = MutableSharedFlow<ImageIntentData>(replay = 1)
 
+    private var _expenseListState = MutableStateFlow<List<GroupExpenseUiModel>?>(null)
+    val expenseListState get() = _expenseListState.asStateFlow()
+
     val intentState = intentData
         .distinctUntilChanged()
         .map { expenseInfoUseCase(it.imageData) }
@@ -31,12 +37,17 @@ class AppViewModel(
             initialValue = null
         )
 
-    val expenseListState = expenseListUseCase()
-        .stateIn(
-            scope = screenModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = null
-        )
+    init {
+        fetchExpenseList()
+    }
+
+    private fun fetchExpenseList() {
+        screenModelScope.launch {
+            expenseListUseCase().collect {
+                _expenseListState.value = it
+            }
+        }
+    }
 
     fun emit(data: ImageIntentData?) {
         if (data == null) return
@@ -58,5 +69,8 @@ class AppViewModel(
         screenModelScope.launch {
             expenseListUseCase.store(asRequestBody)
         }
+
+        // refresh
+        fetchExpenseList()
     }
 }
