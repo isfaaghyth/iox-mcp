@@ -7,22 +7,6 @@ object ExpenseDb {
 
     fun all() = items.toList()
 
-    init {
-        add(
-            name = "Foo",
-            amount = "123",
-            category = "Food",
-            time = "0"
-        )
-
-        add(
-            name = "Bar",
-            amount = "123",
-            category = "Food",
-            time = "0"
-        )
-    }
-
     fun add(
         name: String,
         amount: String,
