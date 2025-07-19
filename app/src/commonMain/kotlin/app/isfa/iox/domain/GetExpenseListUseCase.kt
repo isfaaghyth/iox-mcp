@@ -15,19 +15,19 @@ class GetExpenseListUseCase {
                         date = "Hari Ini",
                         items = listOf(
                             ExpenseUiModel(
-                                merchantName = "Tokopedia",
+                                name = "Tokopedia",
                                 amount = 123,
                                 category = "Shopping",
                                 time = 1557486767000
                             ),
                             ExpenseUiModel(
-                                merchantName = "Tokopedia",
+                                name = "Tokopedia",
                                 amount = 123,
                                 category = "Shopping",
                                 time = 1557486767000
                             ),
                             ExpenseUiModel(
-                                merchantName = "Tokopedia",
+                                name = "Tokopedia",
                                 amount = 123,
                                 category = "Shopping",
                                 time = 1557486767000
@@ -38,19 +38,19 @@ class GetExpenseListUseCase {
                         date = "Kemarin",
                         items = listOf(
                             ExpenseUiModel(
-                                merchantName = "Tokopedia",
+                                name = "Tokopedia",
                                 amount = 123,
                                 category = "Shopping",
                                 time = 1557486767000
                             ),
                             ExpenseUiModel(
-                                merchantName = "Tokopedia",
+                                name = "Tokopedia",
                                 amount = 123,
                                 category = "Shopping",
                                 time = 1557486767000
                             ),
                             ExpenseUiModel(
-                                merchantName = "Tokopedia",
+                                name = "Tokopedia",
                                 amount = 123,
                                 category = "Shopping",
                                 time = 1557486767000

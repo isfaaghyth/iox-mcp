@@ -29,7 +29,7 @@ class GetExpenseInfoUseCase(
         if (model == null) return ExpenseUiModel.Empty
 
         return ExpenseUiModel(
-            merchantName = model.name,
+            name = model.name,
             amount = model.total.toInt(),
             category = model.category,
             time = model.time

@@ -37,7 +37,7 @@ fun ExpenseItem(model: ExpenseUiModel) {
                 color = Color(0xFF111827)
             )
             Text(
-                text = model.merchantName,
+                text = model.name,
                 fontSize = 14.sp,
                 color = Color(0xFF6B7280),
                 modifier = Modifier.padding(top = 2.dp)
@@ -80,7 +80,7 @@ fun ExpenseItemPreview() {
     Box(Modifier.background(Color.White)) {
         ExpenseItem(
             ExpenseUiModel(
-                merchantName = "Mr DIY",
+                name = "Mr DIY",
                 amount = 4000000,
                 category = "Tools",
                 time = 0

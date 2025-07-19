@@ -33,3 +33,5 @@ plugins {
 }
 
 include(":app")
+include(":backend")
+include(":mcp-server")

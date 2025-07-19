@@ -53,7 +53,7 @@ fun IntentImageBottomSheet(
         )
     }
 
-    var name by remember { mutableStateOf(info.merchantName) }
+    var name by remember { mutableStateOf(info.name) }
 
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
@@ -119,7 +119,7 @@ fun IntentImageBottomSheet(
                     onSave(
                         info.copy(
                             amount = amount.text.toIntOrNull() ?: 0,
-                            merchantName = name
+                            name = name
                         )
                     )
 

@@ -19,7 +19,10 @@ ktor = "3.2.2"
 kotlinx-serialization = "2.2.0"
 kotlinx-datetime = "0.7.1"
 koin = "4.1.0"
+kotlin-mcp = "0.5.0"
 voyager = "1.1.0-beta03"
+
+shadow-plugin = "8.1.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -57,6 +60,8 @@ voyager-bottomsheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-s
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
 
+kotlinmcp = { module = "io.modelcontextprotocol:kotlin-sdk", version.ref = "kotlin-mcp" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -65,3 +70,5 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMul
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinx-serialization" }
+shadowPlugin = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-plugin" }
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm" }
