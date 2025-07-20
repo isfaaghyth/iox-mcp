@@ -19,13 +19,21 @@ kotlin {
         }
     }
     
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "MoneyMonitor"
+    iosX64 {
+        binaries.framework {
+            baseName = "Spendings"
+            isStatic = true
+        }
+    }
+    iosArm64 {
+        binaries.framework {
+            baseName = "Spendings"
+            isStatic = true
+        }
+    }
+    iosSimulatorArm64 {
+        binaries.framework {
+            baseName = "Spendings"
             isStatic = true
         }
     }
@@ -81,11 +89,11 @@ kotlin {
 }
 
 android {
-    namespace = "app.isfa.iox"
+    namespace = "app.isfa.spendings"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "app.isfa.iox"
+        applicationId = "app.isfa.spendings"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -113,11 +121,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "app.isfa.iox.MainKt"
+        mainClass = "app.isfa.spendings.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "app.isfa.iox"
+            packageName = "app.isfa.spendings"
             packageVersion = "1.0.0"
         }
     }

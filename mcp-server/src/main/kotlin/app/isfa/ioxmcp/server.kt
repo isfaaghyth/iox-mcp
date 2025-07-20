@@ -1,7 +1,7 @@
 package app.isfa.ioxmcp
 
-import app.isfa.iox.data.repository.ExpenseRepository
-import app.isfa.iox.di.initKoin
+import app.isfa.spendings.data.repository.ExpenseRepository
+import app.isfa.spendings.di.initKoin
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.Implementation
 import io.modelcontextprotocol.kotlin.sdk.ServerCapabilities

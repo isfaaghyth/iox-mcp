@@ -1,4 +1,4 @@
-rootProject.name = "Ioxmcp"
+rootProject.name = "Spendings"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

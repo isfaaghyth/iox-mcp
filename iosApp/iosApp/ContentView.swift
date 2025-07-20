@@ -1,6 +1,6 @@
 import UIKit
 import SwiftUI
-import MoneyMonitor
+import Spendings
 
 struct ComposeView: UIViewControllerRepresentable {
 

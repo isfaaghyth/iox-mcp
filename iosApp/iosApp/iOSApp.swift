@@ -1,5 +1,5 @@
 import SwiftUI
-import MoneyMonitor
+import Spendings
 
 @main
 struct iOSApp: App {

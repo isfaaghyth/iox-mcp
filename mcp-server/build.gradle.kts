@@ -16,7 +16,9 @@ application {
 }
 
 dependencies {
-    implementation(libs.kotlinmcp)
+    implementation(libs.kotlinmcp) {
+        exclude(group = "org.jetbrains.compose.ui", module = "ui-desktop")
+    }
     implementation(projects.app)
     implementation(libs.koin.core)
 }

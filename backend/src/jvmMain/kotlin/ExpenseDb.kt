@@ -1,4 +1,4 @@
-import app.isfa.iox.data.entity.ExpenseResponse
+import app.isfa.spendings.data.entity.ExpenseResponse
 
 object ExpenseDb {
 
