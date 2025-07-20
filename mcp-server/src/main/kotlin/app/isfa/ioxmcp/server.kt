@@ -14,6 +14,9 @@ private val koin = initKoin().koin
 fun configureServer(): Server {
     val repository = koin.get<ExpenseRepository>()
 
+    // streams mcp service compatible
+    repository.forMcp(value = true)
+
     val server = Server(
         Implementation(
             name = "mcp-kotlin expense server",
@@ -33,7 +36,7 @@ fun configureServer(): Server {
         name = "get-expense-list",
         description = "The list of expense from daily transaction"
     ) {
-        val expenses = repository.all(fromMcp = true).getOrNull() ?: listOf()
+        val expenses = repository.all().getOrNull() ?: listOf()
         CallToolResult(
             content = expenses.map {
                 TextContent(it.toString())

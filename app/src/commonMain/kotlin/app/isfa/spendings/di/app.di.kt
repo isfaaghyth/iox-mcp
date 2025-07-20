@@ -1,7 +1,6 @@
 package app.isfa.spendings.di
 
 import app.isfa.spendings.AppViewModel
-import app.isfa.spendings.data.api.EndpointApi
 import app.isfa.spendings.data.repository.ExpenseRepository
 import app.isfa.spendings.data.repository.ExpenseRepositoryImpl
 import app.isfa.spendings.data.repository.GeminiRepository
@@ -16,7 +15,6 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val appModule = module {
-    single<EndpointApi> { EndpointApi.create() }
     singleOf(::PromptRepositoryImpl) bind PromptRepository::class
     factoryOf(::GeminiRepositoryImpl) bind GeminiRepository::class
     factoryOf(::ExpenseRepositoryImpl) bind ExpenseRepository::class

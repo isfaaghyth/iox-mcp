@@ -5,15 +5,16 @@ import app.isfa.spendings.data.repository.ExpenseRepository
 import app.isfa.spendings.data.repository.request.ExpenseRequestBody
 import app.isfa.spendings.domain.model.ExpenseUiModel
 import app.isfa.spendings.domain.model.GroupExpenseUiModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class GetExpenseListUseCase(private val repository: ExpenseRepository) {
 
-    operator fun invoke(): Flow<List<GroupExpenseUiModel>?> {
+    fun fetch(): Flow<List<GroupExpenseUiModel>?> {
         return flow {
             val result = repository
-                .all(fromMcp = false)
+                .all()
                 .getOrDefault(emptyList())
 
             emit(

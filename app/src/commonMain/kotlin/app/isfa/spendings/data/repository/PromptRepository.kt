@@ -5,12 +5,14 @@ import spendings.app.generated.resources.Res
 
 interface PromptRepository {
 
-    suspend fun prompt(file: PromptAsset): String
+    suspend fun read(file: PromptAsset): String
 }
 
 class PromptRepositoryImpl : PromptRepository {
 
-    override suspend fun prompt(file: PromptAsset): String {
-        return Res.readBytes("files/${file.name()}").decodeToString()
+    override suspend fun read(file: PromptAsset): String {
+        return runCatching { Res.readBytes("files/${file.name()}").decodeToString() }
+            .getOrNull()
+            .orEmpty()
     }
 }

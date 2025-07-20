@@ -15,7 +15,7 @@ class GetExpenseInfoUseCase(
 ) {
 
     suspend operator fun invoke(image: ByteArray): ExpenseUiModel? {
-        val prompt = promptRepository.prompt(PromptFile.ReceiptExtractor)
+        val prompt = promptRepository.read(PromptFile.ReceiptExtractor)
 
         return geminiRepository
             .request(prompt, image)

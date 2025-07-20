@@ -9,10 +9,12 @@ import app.isfa.spendings.intent.ImageIntentData
 import app.isfa.spendings.intent.ImageIntentDataPublisher
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -38,12 +40,12 @@ class AppViewModel(
         )
 
     init {
-        //fetchExpenseList()
+        fetchExpenseList()
     }
 
     private fun fetchExpenseList() {
         screenModelScope.launch {
-            expenseListUseCase().collect {
+            expenseListUseCase.fetch().collect {
                 _expenseListState.value = it
             }
         }
