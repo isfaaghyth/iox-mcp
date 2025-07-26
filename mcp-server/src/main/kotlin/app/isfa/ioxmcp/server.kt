@@ -14,9 +14,6 @@ private val koin = initKoin().koin
 fun configureServer(): Server {
     val repository = koin.get<ExpenseRepository>()
 
-    // streams mcp service compatible
-    repository.forMcp(value = true)
-
     val server = Server(
         Implementation(
             name = "mcp-kotlin expense server",
