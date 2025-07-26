@@ -14,25 +14,30 @@ class GetExpenseInfoUseCase(
     private val promptRepository: PromptRepository
 ) {
 
-    suspend operator fun invoke(image: ByteArray): ExpenseUiModel? {
+    suspend operator fun invoke(image: ByteArray?): ExpenseUiModel? {
         val prompt = promptRepository.read(PromptFile.ReceiptExtractor)
 
         return geminiRepository
             .request(prompt, image)
             .map { it.cleanUp() } // if gemini returns as a json markdown format, remove it.
-            .map{ Json.decodeFromString<ReceiptExtractorModel?>(it) }
-            .map(::transformToUiModel)
+            .map(::transform)
             .getOrNull()
     }
 
-    private fun transformToUiModel(model: ReceiptExtractorModel?): ExpenseUiModel {
-        if (model == null) return ExpenseUiModel.Empty
+    private fun transform(result: String): ExpenseUiModel? {
+        val resultCleanedUp = result.cleanUp()
+        return try {
+            val model = Json.decodeFromString<ReceiptExtractorModel?>(resultCleanedUp)
+                ?: return ExpenseUiModel.Empty
 
-        return ExpenseUiModel(
-            name = model.name,
-            amount = model.total.toInt(),
-            category = model.category,
-            time = model.time
-        )
+            return ExpenseUiModel(
+                name = model.name,
+                amount = model.total.toInt(),
+                category = model.category,
+                time = model.time
+            )
+        } catch (e: Exception) {
+            null
+        }
     }
 }

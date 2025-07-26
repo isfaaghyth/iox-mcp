@@ -11,14 +11,14 @@ data class GeminiRequestBody(
 ) {
 
     companion object Companion {
-        fun create(prompt: String, image: ByteArray): String {
+        fun create(prompt: String, image: ByteArray?): String {
             val parts = mutableListOf<RequestContentPart>()
             parts.add(RequestContentPart(text = prompt))
             parts.add(
                 RequestContentPart(
                     data = RequestInlineData(
                         mimeType = "image/jpeg",
-                        data = image.encodeBase64()
+                        data = image?.encodeBase64().orEmpty()
                     )
                 )
             )

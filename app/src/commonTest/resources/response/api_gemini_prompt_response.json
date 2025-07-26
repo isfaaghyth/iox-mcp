@@ -1,0 +1,17 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "This is prompt result!"
+          }
+        ],
+        "role": "model",
+        "finishReason": "stop",
+        "index": 0,
+        "safetyRatings": []
+      }
+    }
+  ]
+}
