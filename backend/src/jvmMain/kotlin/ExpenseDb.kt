@@ -5,6 +5,15 @@ object ExpenseDb {
     private val items = mutableListOf<ExpenseResponse>()
     private var nextId = 1
 
+    init {
+        add(
+            name = "Loren",
+            amount = "123",
+            category = "Food",
+            time = "0"
+        )
+    }
+
     fun all() = items.toList()
 
     fun add(

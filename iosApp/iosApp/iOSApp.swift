@@ -1,19 +1,19 @@
 import SwiftUI
-import Spendings
+import KmpSpendings
 
 @main
 struct iOSApp: App {
-    private var receiver = ImageIntentReceiver()
+   private var receiver = ImageIntentReceiver()
 
     init() {
-        ProvidersKt.doInitKoin()
+       ProvidersKt.doInitKoin()
     }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .onOpenURL { url in
-                    receiver.handleSharedImages(urls: [url])
+                   receiver.handleSharedImages(urls: [url])
                 }
         }
     }

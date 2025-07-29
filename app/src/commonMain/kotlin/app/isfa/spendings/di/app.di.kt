@@ -1,6 +1,6 @@
 package app.isfa.spendings.di
 
-import app.isfa.spendings.AppViewModel
+import app.isfa.spendings.MainViewModel
 import app.isfa.spendings.data.repository.ExpenseRepository
 import app.isfa.spendings.data.repository.ExpenseRepositoryImpl
 import app.isfa.spendings.data.repository.GeminiRepository
@@ -22,5 +22,5 @@ val appModule = module {
     factoryOf(::GetExpenseInfoUseCase)
     factoryOf(::GetExpenseListUseCase)
 
-    factoryOf(::AppViewModel)
+    factoryOf(::MainViewModel)
 }

@@ -1,12 +1,14 @@
 package app.isfa.spendings
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import app.isfa.spendings.intent.ImageIntentData
 import app.isfa.spendings.ui.IntentImageBottomSheet
 import app.isfa.spendings.ui.SpendingsContent
@@ -17,30 +19,35 @@ class MainScreen(private val intentData: ImageIntentData?) : Screen {
 
     @Composable
     override fun Content() {
-        val viewModel = koinScreenModel<AppViewModel>()
-
-        val expenseInfo by viewModel.intentState.collectAsState()
-        val expenseList by viewModel.expenseListState.collectAsState()
-
-        var shouldExpenseInfoSheetShown by remember { mutableStateOf(false) }
+        val viewModel = koinScreenModel<MainViewModel>()
+        val state by viewModel.state.collectAsState()
 
         // Extract receipt information with Gemini if there's intent data received
         LaunchedEffect(intentData) {
-            viewModel.emit(intentData)
+            viewModel.setIntentImageData(intentData)
         }
 
-        // Showing the bottom sheet if the info is parsable
-        expenseInfo?.let {
-            shouldExpenseInfoSheetShown = true
+        Box(modifier = Modifier.fillMaxSize()) {
+            // History expense list
+            SpendingsContent(state.expanseList)
+            
+            // Black overlay when bottom sheet is shown
+            if (state.isIntentProceed) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.5f))
+                )
+            }
+        }
 
+        // Show bottom sheet with loading state immediately, then with data when ready
+        if (state.isIntentProceed || state.intentDataProceed != null) {
             IntentImageBottomSheet(
-                info = it,
-                onSave = { model -> viewModel.store(model) },
-                onDismiss = { shouldExpenseInfoSheetShown = false }
+                info = state.intentDataProceed ?: return,
+                onSave = { model -> viewModel.saveData(model) },
+                onDismiss = {  }
             )
         }
-
-        // History expense list
-        SpendingsContent(expenseList)
     }
 }

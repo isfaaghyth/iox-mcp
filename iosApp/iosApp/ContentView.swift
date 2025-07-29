@@ -1,6 +1,6 @@
 import UIKit
 import SwiftUI
-import Spendings
+import KmpSpendings
 
 struct ComposeView: UIViewControllerRepresentable {
 

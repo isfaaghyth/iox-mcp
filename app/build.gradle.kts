@@ -18,27 +18,18 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
-    iosX64 {
-        binaries.framework {
-            baseName = "Spendings"
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "KmpSpendings"
             isStatic = true
         }
     }
-    iosArm64 {
-        binaries.framework {
-            baseName = "Spendings"
-            isStatic = true
-        }
-    }
-    iosSimulatorArm64 {
-        binaries.framework {
-            baseName = "Spendings"
-            isStatic = true
-        }
-    }
-    
-    //    jvm()
+
     jvm("desktop")
     sourceSets {
         val desktopMain by getting
@@ -48,6 +39,9 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
