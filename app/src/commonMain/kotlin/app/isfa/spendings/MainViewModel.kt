@@ -28,37 +28,16 @@ class MainViewModel(
     val state get() = _state.asStateFlow()
 
     init {
-        refreshExpanseList()
+        fetchExpenseList()
 
         screenModelScope.launch(Dispatchers.Default) {
             intentData
                 .distinctUntilChanged()
-                .collect(::shouldImageIntentDataProceed)
+                .collect(::extractReceiptWithGemini)
         }
     }
 
-    fun refreshExpanseList() {
-        screenModelScope.launch(Dispatchers.IO) {
-            expenseListUseCase.fetch().collect { result ->
-                _state.update { it.copy(expanseList = result) }
-            }
-        }
-    }
-
-    private fun shouldImageIntentDataProceed(data: ImageIntentData) {
-        screenModelScope.launch(Dispatchers.IO) {
-            val result = expenseInfoUseCase(data.imageData)
-
-            _state.update {
-                it.copy(
-                    intentDataProceed = result,
-                    isIntentProceed = false
-                )
-            }
-        }
-    }
-
-    fun setIntentImageData(data: ImageIntentData? = null) {
+    fun emitIntentData(data: ImageIntentData? = null) {
         if (data == null) return
 
         _state.update { it.copy(isIntentProceed = true) }
@@ -66,10 +45,8 @@ class MainViewModel(
         ImageIntentDataPublisher.reset()
     }
 
-    fun saveData(model: ExpenseUiModel?) {
+    fun storeExpenseData(model: ExpenseUiModel?) {
         if (model == null) return
-
-        refreshExpanseList()
 
         val body = ExpenseRequestBody(
             name = model.name,
@@ -80,6 +57,36 @@ class MainViewModel(
 
         screenModelScope.launch {
             expenseListUseCase.store(body)
+            fetchExpenseList() // Refresh list
+        }
+    }
+
+    fun hideToast() = _state.update { it.copy(errorMessage = "") }
+
+    private fun fetchExpenseList() {
+        screenModelScope.launch(Dispatchers.IO) {
+            expenseListUseCase.fetch().collect { result ->
+                _state.update { it.copy(expanseList = result) }
+            }
+        }
+    }
+
+    private fun extractReceiptWithGemini(data: ImageIntentData) {
+        screenModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                expenseInfoUseCase(data.imageData)
+            }.onSuccess { result ->
+                _state.update {
+                    it.copy(
+                        intentDataProceed = result,
+                        isIntentProceed = false
+                    )
+                }
+            }.onFailure { error ->
+                _state.update {
+                    it.copy(errorMessage = error.message.orEmpty())
+                }
+            }
         }
     }
 }

@@ -10,11 +10,15 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 @OptIn(ExperimentalTime::class)
-fun Long.formatReadableDateTime(): String {
+fun Long.convertToLocalDateTime(): LocalDateTime {
     val instant = Instant.fromEpochMilliseconds(this)
+    return instant.toLocalDateTime(TimeZone.currentSystemDefault())
+}
 
+@OptIn(ExperimentalTime::class)
+fun LocalDateTime.formatReadableDateTime(): String {
     val currentDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-    val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+    val localDateTime = this
 
     val dayOfWeek = getDayOfWeekShort(localDateTime.dayOfWeek)
     val day = localDateTime.day.toString().padStart(2, ' ')

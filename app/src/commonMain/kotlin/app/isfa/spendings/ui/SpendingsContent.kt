@@ -43,12 +43,7 @@ fun SpendingsContent(data: List<GroupExpenseUiModel>?) {
             )
         }
     ) { contentPadding ->
-        Box(
-            Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-                .navigationBarsPadding()
-        ) {
+        Box(Modifier.padding(contentPadding).fillMaxSize()) {
             when {
                 data == null -> {} // TODO: Loading state
                 data.isEmpty() -> EmptyStateContent()

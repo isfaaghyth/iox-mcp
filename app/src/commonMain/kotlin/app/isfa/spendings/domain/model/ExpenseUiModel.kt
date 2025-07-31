@@ -2,6 +2,7 @@
 
 package app.isfa.spendings.domain.model
 
+import app.isfa.spendings.util.convertToLocalDateTime
 import app.isfa.spendings.util.formatReadableDateTime
 import kotlin.time.ExperimentalTime
 
@@ -12,7 +13,9 @@ data class ExpenseUiModel(
     val time: Long
 ) {
 
-    fun asReadableTime() = time.formatReadableDateTime()
+    fun toLocalDateTime() = time.convertToLocalDateTime()
+
+    fun toReadableTime() = toLocalDateTime().formatReadableDateTime()
 
     companion object {
         val Empty get() = ExpenseUiModel(

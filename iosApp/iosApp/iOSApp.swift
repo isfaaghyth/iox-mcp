@@ -13,7 +13,7 @@ struct iOSApp: App {
         WindowGroup {
             ContentView()
                 .onOpenURL { url in
-                   receiver.handleSharedImages(urls: [url])
+                   receiver.processImageUrl(url: url)
                 }
         }
     }

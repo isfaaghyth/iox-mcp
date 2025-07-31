@@ -16,13 +16,7 @@ actual class ImageIntentReceiver {
         ImageIntentDataPublisher.store(model)
     }
 
-    fun handleSharedImages(urls: List<NSURL>) {
-        urls.forEach { url ->
-            processImageUrl(url)
-        }
-    }
-
-    private fun processImageUrl(url: NSURL) {
+    fun processImageUrl(url: NSURL) {
         val data = NSData.dataWithContentsOfURL(url)
 
         data?.let { nsData ->

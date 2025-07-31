@@ -10,7 +10,7 @@ val NetworkUrl.Gemini.prompt : NetworkUrls
             baseUrl = "generativelanguage.googleapis.com",
             path = "/v1beta/models/gemini-2.0-flash:generateContent",
             params = mapOf(
-                "key" to "AIzaSyDsUpcgwaXEuqm_5rgRvdSv7wcRocAUpMA"
+                "key" to "..."
             )
         ).createWithHttps()
     }

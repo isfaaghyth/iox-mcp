@@ -64,7 +64,7 @@ fun ExpenseItem(model: ExpenseUiModel) {
             }
 
             Text(
-                text = model.asReadableTime(),
+                text = model.toReadableTime(),
                 fontSize = 12.sp,
                 color = Color(0xFF9CA3AF),
                 modifier = Modifier.padding(top = 4.dp)

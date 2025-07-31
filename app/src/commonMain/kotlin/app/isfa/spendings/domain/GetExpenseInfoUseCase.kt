@@ -21,7 +21,7 @@ class GetExpenseInfoUseCase(
             .request(prompt, image)
             .map { it.cleanUp() } // if gemini returns as a json markdown format, remove it.
             .map(::transform)
-            .getOrNull()
+            .getOrThrow()
     }
 
     private fun transform(result: String): ExpenseUiModel? {

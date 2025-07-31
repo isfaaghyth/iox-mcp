@@ -104,7 +104,7 @@ fun IntentImageBottomSheet(
 
             FormField(
                 label = "When",
-                value = info.asReadableTime(),
+                value = info.toReadableTime(),
                 isEditable = false
             )
 
