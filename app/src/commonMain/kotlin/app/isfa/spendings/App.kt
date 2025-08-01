@@ -6,10 +6,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import app.isfa.spendings.intent.ImageIntentDataPublisher
 import cafe.adriel.voyager.navigator.Navigator
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-@Preview
 fun App() {
     val capturedImage by ImageIntentDataPublisher.capturedImage.collectAsState()
 

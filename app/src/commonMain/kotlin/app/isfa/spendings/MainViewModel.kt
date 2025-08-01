@@ -22,30 +22,49 @@ class MainViewModel(
     private val expenseListUseCase: GetExpenseListUseCase
 ) : ScreenModel {
 
-    private var intentData = MutableSharedFlow<ImageIntentData>(replay = 1)
-
     private val _state = MutableStateFlow(MainUiState.Default)
     val state get() = _state.asStateFlow()
+
+    private var _action = MutableSharedFlow<MainAction>(replay = 2)
 
     init {
         fetchExpenseList()
 
         screenModelScope.launch(Dispatchers.Default) {
-            intentData
+            _action
                 .distinctUntilChanged()
-                .collect(::extractReceiptWithGemini)
+                .collect(::onActionHandler)
         }
     }
 
-    fun emitIntentData(data: ImageIntentData? = null) {
+    fun sendAction(action: MainAction) {
+        _action.tryEmit(action)
+    }
+
+    private fun onActionHandler(action: MainAction) {
+        when (action) {
+            DismissExpense -> removeCurrentIntentData()
+            HideToast -> hideToast()
+            is IntentProceed -> intentImageProceed(action.data)
+            is SaveExpense -> storeExpenseData(action.model)
+        }
+    }
+
+    private fun intentImageProceed(data: ImageIntentData? = null) {
         if (data == null) return
 
-        _state.update { it.copy(isIntentProceed = true) }
-        intentData.tryEmit(data)
+        _state.update {
+            it.copy(
+                isIntentProceed = true,
+                currentIntentData = data
+            )
+        }
+
+        extractReceiptWithGemini(data)
         ImageIntentDataPublisher.reset()
     }
 
-    fun storeExpenseData(model: ExpenseUiModel?) {
+    private fun storeExpenseData(model: ExpenseUiModel?) {
         if (model == null) return
 
         val body = ExpenseRequestBody(
@@ -61,7 +80,18 @@ class MainViewModel(
         }
     }
 
-    fun hideToast() = _state.update { it.copy(errorMessage = "") }
+    private fun hideToast() = _state.update { it.copy(errorMessage = "") }
+
+    private fun removeCurrentIntentData() {
+        _state.update {
+            it.copy(
+                currentIntentData = null,
+                intentDataProceed = null
+            )
+        }
+
+        ImageIntentDataPublisher.reset()
+    }
 
     private fun fetchExpenseList() {
         screenModelScope.launch(Dispatchers.IO) {

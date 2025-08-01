@@ -1,5 +1,8 @@
 package app.isfa.spendings.intent
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ImageIntentData(
     val imageData: ByteArray,
     val fileName: String? = null,

@@ -1,24 +1,30 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package app.isfa.spendings
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.isfa.spendings.intent.ImageIntentData
 import app.isfa.spendings.ui.IntentImageBottomSheet
 import app.isfa.spendings.ui.SpendingsContent
+import app.isfa.spendings.ui._component.AnimatedLoadingBar
 import app.isfa.spendings.ui._component.BlackToast
 import app.isfa.spendings.ui._component.BlackToastType
 import cafe.adriel.voyager.core.screen.Screen
@@ -36,40 +42,46 @@ class MainScreen(private val intentData: ImageIntentData?) : Screen {
         val state by viewModel.state.collectAsState()
 
         LaunchedEffect(intentData) {
-            viewModel.emitIntentData(intentData)
+            viewModel.sendAction(IntentProceed(intentData))
         }
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            SpendingsContent(state.expanseList)
-            
-            if (state.intentProceed()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.5f))
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
+        Scaffold(
+            topBar = {
+                Column(Modifier.fillMaxWidth()) {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                "✨ Spendings",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(Color.White)
                     )
+
+                    AnimatedLoadingBar(isLoading = state.intentProceed())
                 }
             }
-        }
+        ) { contentPadding ->
+            Box(Modifier.padding(contentPadding).fillMaxSize()) {
+                SpendingsContent(state)
+            }
 
-        if (state.errorMessage.isNotEmpty()) {
-            BlackToast(
-                modifier = Modifier.padding(bottom = 32.dp),
-                message = state.errorMessage,
-                type = BlackToastType.Short
-            ) {
-                viewModel.hideToast()
+            if (state.errorMessage.isNotEmpty()) {
+                BlackToast(
+                    modifier = Modifier.padding(bottom = 32.dp),
+                    message = state.errorMessage,
+                    type = BlackToastType.Short,
+                    onToastDismissed = { viewModel.sendAction(HideToast) }
+                )
             }
         }
 
         if (state.isIntentProceed || state.intentDataProceed != null) {
             IntentImageBottomSheet(
                 info = state.intentDataProceed ?: return,
-                onSave = { model -> viewModel.storeExpenseData(model) },
-                onDismiss = {  }
+                onSave = { model -> viewModel.sendAction(SaveExpense(model)) },
+                onDismiss = { viewModel.sendAction(DismissExpense) }
             )
         }
     }
