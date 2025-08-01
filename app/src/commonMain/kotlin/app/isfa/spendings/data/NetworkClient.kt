@@ -30,9 +30,9 @@ object NetworkClient {
             )
         }
 
-        install(Logging) {
+        /*install(Logging) {
             logger = Logger.SIMPLE
             level = LogLevel.HEADERS
-        }
+        }*/
     }
 }

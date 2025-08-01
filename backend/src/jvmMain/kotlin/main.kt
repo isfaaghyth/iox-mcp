@@ -40,19 +40,13 @@ fun Application.module() {
 
     routing {
         get("/expenses") {
-            call.respond(ExpenseDb.all())
+            call.respond(LruDatabaseManager.all())
         }
 
         post("/expense/create") {
             try {
                 val request = call.receive<CreateExpenseRequestBody>()
-                val item = ExpenseDb.add(
-                    name = request.name,
-                    amount = request.amount,
-                    category = request.category,
-                    time = request.time
-                )
-
+                val item = LruDatabaseManager.add(request)
                 call.respond(HttpStatusCode.Created, item)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid request body")

@@ -21,27 +21,16 @@ actual class ImageIntentReceiver(private val context: Context) {
         when (intent.action) {
             Intent.ACTION_SEND -> {
                 if (intent.type?.startsWith("image/") == true) {
-                    handleSingleImage(intent)
+                    handleImage(intent)
                 }
             }
         }
     }
 
-    private fun handleSingleImage(intent: Intent) {
+    private fun handleImage(intent: Intent) {
         val imageUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
 
         imageUri?.let { uri ->
-            val imageData = readImageFromUri(uri)
-            val fileName = getFileNameFromUri(uri)
-            imageData?.let { data ->
-                onReceivedImage(data, fileName)
-            }
-        }
-    }
-
-    private fun handleMultipleImages(intent: Intent) {
-        val imageUris = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
-        imageUris?.forEach { uri ->
             val imageData = readImageFromUri(uri)
             val fileName = getFileNameFromUri(uri)
             imageData?.let { data ->
