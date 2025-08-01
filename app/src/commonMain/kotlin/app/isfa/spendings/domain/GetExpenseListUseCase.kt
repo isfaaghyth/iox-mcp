@@ -21,12 +21,11 @@ import kotlin.time.ExperimentalTime
 
 class GetExpenseListUseCase(private val repository: ExpenseRepository) {
 
-    fun fetch(): Flow<List<GroupExpenseUiModel>?> {
+    fun fetch(): Flow<Result<List<GroupExpenseUiModel>>> {
         return flow {
             val result = repository.all()
-                .getOrDefault(emptyList())
-                .map(::transformToUiModel)
-                .groupByDate()
+                .map { it.map(::transformToUiModel) }
+                .map { it.groupByDate() }
 
             emit(result)
         }

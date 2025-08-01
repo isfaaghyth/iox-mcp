@@ -65,28 +65,37 @@ class MainViewModel(
 
     private fun fetchExpenseList() {
         screenModelScope.launch(Dispatchers.IO) {
-            expenseListUseCase.fetch().collect { result ->
-                _state.update { it.copy(expanseList = result) }
-            }
+            expenseListUseCase.fetch()
+                .collect { expenseList ->
+                    expenseList
+                        .onSuccess { result ->
+                            _state.update { it.copy(expanseList = result) }
+                        }
+                        .onFailure { error ->
+                            _state.update {
+                                it.copy(errorMessage = error.message.orEmpty())
+                            }
+                        }
+                }
         }
     }
 
     private fun extractReceiptWithGemini(data: ImageIntentData) {
         screenModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                expenseInfoUseCase(data.imageData)
-            }.onSuccess { result ->
-                _state.update {
-                    it.copy(
-                        intentDataProceed = result,
-                        isIntentProceed = false
-                    )
+            expenseInfoUseCase(data.imageData)
+                .onSuccess { result ->
+                    _state.update {
+                        it.copy(
+                            intentDataProceed = result,
+                            isIntentProceed = false
+                        )
+                    }
                 }
-            }.onFailure { error ->
-                _state.update {
-                    it.copy(errorMessage = error.message.orEmpty())
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(errorMessage = error.message.orEmpty())
+                    }
                 }
-            }
         }
     }
 }

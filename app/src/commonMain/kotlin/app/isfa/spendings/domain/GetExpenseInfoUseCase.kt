@@ -6,7 +6,6 @@ import app.isfa.spendings.data.repository.prompt.PromptFile
 import app.isfa.spendings.data.repository.prompt.ReceiptExtractor
 import app.isfa.spendings.domain.model.ExpenseUiModel
 import app.isfa.spendings.domain.model.ReceiptExtractorModel
-import app.isfa.spendings.util.cleanUp
 import kotlinx.serialization.json.Json
 
 class GetExpenseInfoUseCase(
@@ -14,23 +13,24 @@ class GetExpenseInfoUseCase(
     private val promptRepository: PromptRepository
 ) {
 
-    suspend operator fun invoke(image: ByteArray?): ExpenseUiModel? {
+    suspend operator fun invoke(image: ByteArray?): Result<ExpenseUiModel?> {
         val prompt = promptRepository.read(PromptFile.ReceiptExtractor)
 
         return geminiRepository
             .request(prompt, image)
-            .map { it.cleanUp() } // if gemini returns as a json markdown format, remove it.
+            // if gemini returns as a json markdown format, remove it.
+            .map { it.toExactJson() }
             .map(::transform)
-            .getOrThrow()
     }
 
     private fun transform(result: String): ExpenseUiModel? {
-        val resultCleanedUp = result.cleanUp()
         return try {
+            val resultCleanedUp = result.toExactJson()
+
             val model = Json.decodeFromString<ReceiptExtractorModel?>(resultCleanedUp)
                 ?: return ExpenseUiModel.Empty
 
-            return ExpenseUiModel(
+            ExpenseUiModel(
                 name = model.name,
                 amount = model.total.toInt(),
                 category = model.category,
@@ -39,5 +39,17 @@ class GetExpenseInfoUseCase(
         } catch (e: Exception) {
             null
         }
+    }
+
+    // Somehow gemini returns as json markdown format, this mapper will remove unexpected json format.
+    private fun String.toExactJson(): String {
+        if (isEmpty()) return ""
+
+        return this
+            .replace("```json", "")
+            .replace("```", "")
+            .replace("\\n", "")
+            .replace("\\", "")
+            .trim()
     }
 }

@@ -57,7 +57,7 @@ class MainScreen(private val intentData: ImageIntentData?) : Screen {
 
         if (state.errorMessage.isNotEmpty()) {
             BlackToast(
-                modifier = Modifier.padding(bottom = 64.dp),
+                modifier = Modifier.padding(bottom = 32.dp),
                 message = state.errorMessage,
                 type = BlackToastType.Short
             ) {

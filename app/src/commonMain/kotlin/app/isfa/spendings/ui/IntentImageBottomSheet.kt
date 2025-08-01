@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -127,7 +128,15 @@ fun IntentImageBottomSheet(
                         state.hide()
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                enabled = amount.text.isNotEmpty(),
+                colors = ButtonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White,
+                    disabledContainerColor = Color.Gray
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
                 Text("Save")
             }

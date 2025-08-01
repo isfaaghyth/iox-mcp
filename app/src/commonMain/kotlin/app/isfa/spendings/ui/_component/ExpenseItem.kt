@@ -37,7 +37,7 @@ fun ExpenseItem(model: ExpenseUiModel) {
                 color = Color(0xFF111827)
             )
             Text(
-                text = model.name,
+                text = model.name.uppercase(),
                 fontSize = 14.sp,
                 color = Color(0xFF6B7280),
                 modifier = Modifier.padding(top = 2.dp)
@@ -50,8 +50,8 @@ fun ExpenseItem(model: ExpenseUiModel) {
             Box(
                 modifier = Modifier
                     .background(
-                        color = Color(0xFF10B981),
-                        shape = RoundedCornerShape(4.dp)
+                        color = Color.Black,
+                        shape = RoundedCornerShape(50)
                     )
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
