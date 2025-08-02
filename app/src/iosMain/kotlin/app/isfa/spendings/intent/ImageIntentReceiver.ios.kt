@@ -17,8 +17,9 @@ actual class ImageIntentReceiver {
     }
 
     fun processImageUrl(url: NSURL) {
-        val data = NSData.dataWithContentsOfURL(url)
+        ImageIntentDataPublisher.loading()
 
+        val data = NSData.dataWithContentsOfURL(url)
         data?.let { nsData ->
             val imageData = nsData.toByteArray()
             val fileName = url.lastPathComponent

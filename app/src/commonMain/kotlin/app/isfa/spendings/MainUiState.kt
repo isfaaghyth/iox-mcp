@@ -14,6 +14,11 @@ data class MainUiState(
 
     fun intentProceed() = isIntentProceed && errorMessage.isEmpty()
 
+    fun resetIntentData() = this.copy(
+        currentIntentData = null,
+        intentDataProceed = null
+    )
+
     companion object {
         val Default get() = MainUiState(
             currentIntentData = null,

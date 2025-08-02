@@ -31,7 +31,7 @@ fun ExpenseItem(model: ExpenseUiModel) {
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = "Rp ${model.amount}",
+                text = "Rp ${model.amountFormatted}",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF111827)

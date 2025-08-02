@@ -1,15 +1,14 @@
 package app.isfa.spendings
 
-import app.isfa.spendings.data.repository.request.ExpenseRequestBody
 import app.isfa.spendings.domain.GetExpenseInfoUseCase
 import app.isfa.spendings.domain.GetExpenseListUseCase
 import app.isfa.spendings.domain.model.ExpenseUiModel
 import app.isfa.spendings.intent.ImageIntentData
 import app.isfa.spendings.intent.ImageIntentDataPublisher
+import app.isfa.spendings.intent.ImageIntentState
+import app.isfa.spendings.util.CoroutineDispatchers
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val expenseInfoUseCase: GetExpenseInfoUseCase,
-    private val expenseListUseCase: GetExpenseListUseCase
+    private val expenseListUseCase: GetExpenseListUseCase,
+    private val dispatchers: CoroutineDispatchers
 ) : ScreenModel {
 
     private val _state = MutableStateFlow(MainUiState.Default)
@@ -30,7 +30,12 @@ class MainViewModel(
     init {
         fetchExpenseList()
 
-        screenModelScope.launch(Dispatchers.Default) {
+        screenModelScope.launch(dispatchers.default) {
+            ImageIntentDataPublisher.capturedImage
+                .collect(::onImageIntent)
+        }
+
+        screenModelScope.launch(dispatchers.default) {
             _action
                 .distinctUntilChanged()
                 .collect(::onActionHandler)
@@ -41,77 +46,54 @@ class MainViewModel(
         _action.tryEmit(action)
     }
 
+    private fun onImageIntent(state: ImageIntentState) {
+        when (state) {
+            is ImageIntentState.Succeed -> intentImageProceed(state.data)
+            is ImageIntentState.Loading -> loadingState()
+            is ImageIntentState.Fail -> showToast(Throwable("Fail to retrieve the image's data"))
+            is ImageIntentState.None -> Unit
+        }
+    }
+
     private fun onActionHandler(action: MainAction) {
         when (action) {
+            is SaveExpense -> storeExpenseData(action.model)
             DismissExpense -> removeCurrentIntentData()
             HideToast -> hideToast()
-            is IntentProceed -> intentImageProceed(action.data)
-            is SaveExpense -> storeExpenseData(action.model)
         }
     }
 
     private fun intentImageProceed(data: ImageIntentData? = null) {
         if (data == null) return
 
-        _state.update {
-            it.copy(
-                isIntentProceed = true,
-                currentIntentData = data
-            )
-        }
-
+        _state.update { it.copy(currentIntentData = data) }
         extractReceiptWithGemini(data)
-        ImageIntentDataPublisher.reset()
     }
 
     private fun storeExpenseData(model: ExpenseUiModel?) {
         if (model == null) return
 
-        val body = ExpenseRequestBody(
-            name = model.name,
-            amount = model.amount.toString(),
-            category = model.category,
-            time = model.time.toString()
-        )
-
         screenModelScope.launch {
-            expenseListUseCase.store(body)
-            fetchExpenseList() // Refresh list
+            expenseListUseCase.store(model.asRequestBody())
+            fetchExpenseList() // refresh list
         }
-    }
-
-    private fun hideToast() = _state.update { it.copy(errorMessage = "") }
-
-    private fun removeCurrentIntentData() {
-        _state.update {
-            it.copy(
-                currentIntentData = null,
-                intentDataProceed = null
-            )
-        }
-
-        ImageIntentDataPublisher.reset()
     }
 
     private fun fetchExpenseList() {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatchers.io) {
             expenseListUseCase.fetch()
                 .collect { expenseList ->
                     expenseList
                         .onSuccess { result ->
                             _state.update { it.copy(expanseList = result) }
                         }
-                        .onFailure { error ->
-                            _state.update {
-                                it.copy(errorMessage = error.message.orEmpty())
-                            }
-                        }
+                        .onFailure(::showToast)
                 }
         }
     }
 
     private fun extractReceiptWithGemini(data: ImageIntentData) {
-        screenModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(dispatchers.io) {
             expenseInfoUseCase(data.imageData)
                 .onSuccess { result ->
                     _state.update {
@@ -121,11 +103,26 @@ class MainViewModel(
                         )
                     }
                 }
-                .onFailure { error ->
-                    _state.update {
-                        it.copy(errorMessage = error.message.orEmpty())
-                    }
-                }
+                .onFailure(::showToast)
         }
+    }
+
+    private fun loadingState() = _state.update { it.copy(isIntentProceed = true) }
+
+    private fun showToast(t: Throwable) {
+        val errorMessage = t.message.orEmpty()
+
+        // render the explicit error message in logcat
+        println(errorMessage)
+
+        // show toast error message
+        _state.update { it.copy(errorMessage = "Uh-no! Please try again.") }
+    }
+
+    private fun hideToast() = _state.update { it.copy(errorMessage = "") }
+
+    private fun removeCurrentIntentData() {
+        _state.update { it.resetIntentData() }
+        ImageIntentDataPublisher.reset()
     }
 }

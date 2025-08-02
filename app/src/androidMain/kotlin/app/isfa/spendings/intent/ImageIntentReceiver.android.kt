@@ -21,6 +21,7 @@ actual class ImageIntentReceiver(private val context: Context) {
         when (intent.action) {
             Intent.ACTION_SEND -> {
                 if (intent.type?.startsWith("image/") == true) {
+                    ImageIntentDataPublisher.loading()
                     handleImage(intent)
                 }
             }

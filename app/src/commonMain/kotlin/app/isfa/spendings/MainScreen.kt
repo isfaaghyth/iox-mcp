@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,29 +20,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.isfa.spendings.intent.ImageIntentData
 import app.isfa.spendings.ui.IntentImageBottomSheet
 import app.isfa.spendings.ui.SpendingsContent
 import app.isfa.spendings.ui._component.AnimatedLoadingBar
 import app.isfa.spendings.ui._component.BlackToast
 import app.isfa.spendings.ui._component.BlackToastType
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.koin.koinScreenModel
+import org.jetbrains.compose.resources.stringResource
+import spendings.app.generated.resources.Res
+import spendings.app.generated.resources.app_title
 
-class MainScreen(private val intentData: ImageIntentData?) : Screen {
-
-    override val key: ScreenKey
-        get() = intentData.toString()
+class MainScreen : Screen {
 
     @Composable
     override fun Content() {
         val viewModel = koinScreenModel<MainViewModel>()
         val state by viewModel.state.collectAsState()
-
-        LaunchedEffect(intentData) {
-            viewModel.sendAction(IntentProceed(intentData))
-        }
 
         Scaffold(
             topBar = {
@@ -51,7 +44,7 @@ class MainScreen(private val intentData: ImageIntentData?) : Screen {
                     TopAppBar(
                         title = {
                             Text(
-                                "✨ Spendings",
+                                stringResource(Res.string.app_title),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp
                             )

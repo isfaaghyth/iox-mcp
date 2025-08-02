@@ -54,7 +54,7 @@ fun ExpenseGroup(data: GroupExpenseUiModel) {
             }
 
             // Total if available
-            data.total?.let { total ->
+            if (data.total != null) {
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 12.dp),
                     color = Color(0xFFE5E7EB)
@@ -71,7 +71,7 @@ fun ExpenseGroup(data: GroupExpenseUiModel) {
                         color = Color(0xFF111827)
                     )
                     Text(
-                        text = "Rp.$total",
+                        text = "Rp.${data.totalFormatted}",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF111827)

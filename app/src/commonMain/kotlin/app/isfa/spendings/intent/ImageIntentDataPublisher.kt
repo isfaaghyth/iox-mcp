@@ -5,14 +5,14 @@ import kotlinx.coroutines.flow.asStateFlow
 
 object ImageIntentDataPublisher {
 
-    private var _capturedImage = MutableStateFlow<ImageIntentData?>(null)
+    private var _capturedImage = MutableStateFlow<ImageIntentState>(ImageIntentState.None)
     val capturedImage get() = _capturedImage.asStateFlow()
 
-    fun store(data: ImageIntentData) {
-        _capturedImage.value = data
-    }
+    fun loading() = emitState(ImageIntentState.Loading)
+    fun store(data: ImageIntentData) = emitState(ImageIntentState.Succeed(data))
+    fun reset() = emitState(ImageIntentState.None)
 
-    fun reset() {
-        _capturedImage.value = null
+    fun emitState(state: ImageIntentState) {
+        _capturedImage.value = state
     }
 }

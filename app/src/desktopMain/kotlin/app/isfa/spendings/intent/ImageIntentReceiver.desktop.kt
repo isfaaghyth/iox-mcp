@@ -33,6 +33,7 @@ actual class ImageIntentReceiver {
         val file = dialog.file
 
         if (directory != null && file != null) {
+            ImageIntentDataPublisher.loading()
             val selectedFile = File(directory, file)
             try {
                 val imageData = Files.readAllBytes(selectedFile.toPath())
