@@ -6,11 +6,7 @@
 
 A cross-platform spending tracker application built with Kotlin Multiplatform and Compose Multiplatform, targeting Android, and iOS platforms.
 
-<video width="320" height="240" controls>
-  <source src="https://github.com/isfaaghyth/iox-mcp/raw/refs/heads/main/demo.mp4" type="video/mp4">
-</video>
-
-<img src="test.png" alt="Application Screenshot" />
+<img src="demo.gif" alt="Demo Animation" />
 
 ## Project Structure
 - `/app` - Shared code for all platforms
@@ -77,11 +73,3 @@ Open the `iosApp/iosApp.xcodeproj` file in Xcode and run the project, or though 
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Learn More
-
-- [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)
-- [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/)
-- [Ktor](https://ktor.io/)
-- [Koin](https://insert-koin.io/)
-- [Voyager](https://voyager.adriel.cafe/)
